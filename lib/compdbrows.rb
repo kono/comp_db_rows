@@ -122,7 +122,7 @@ class CompDbRows
     end
   end
   
-  def compareRows(table_a,table_b)
+  def compareRows(table_a,table_b,max_errors)
     ret =true
     cnt=0
     errcnt = 0
@@ -137,7 +137,7 @@ class CompDbRows
       sth_a = dbh_a.execute(sql_a)
       sth_b = dbh_b.execute(sql_b)
     
-      while a_h=sth_a.fetch_hash and errcnt <= 10 do
+      while a_h=sth_a.fetch_hash and errcnt <= max_errors do
         cnt += 1
         b_h = sth_b.fetch_hash
         if a_h != b_h
@@ -185,8 +185,9 @@ if File.basename($0).downcase == 'compdbrows.rb' then
 
   t0=ARGV[0]
   t1=ARGV[1]
-
-  proc.compareRows(t0,t1) if proc.checkRcdCount(t0,t1)
+  
+  max_errors=10
+  proc.compareRows(t0,t1,max_errors) if proc.checkRcdCount(t0,t1)
 
 end
 
