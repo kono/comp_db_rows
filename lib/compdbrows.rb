@@ -125,6 +125,7 @@ class CompDbRows
   def compareRows(table_a,table_b)
     ret =true
     cnt=0
+    errcnt = 0
     begin
       dbh_a,dbh_b = dbcon1,dbcon2
       
@@ -136,13 +137,14 @@ class CompDbRows
       sth_a = dbh_a.execute(sql_a)
       sth_b = dbh_b.execute(sql_b)
     
-      while a_h=sth_a.fetch_hash do
+      while a_h=sth_a.fetch_hash and errcnt <= 10 do
         cnt += 1
         b_h = sth_b.fetch_hash
         if a_h != b_h
           ret = false
           a_h.each{|k,v|
             if b_h[k] != v then
+              errcnt += 1
               print "\nUNMATCH!  line(s):" + cnt.to_s + "| field: " + k + " | values(a != b) :" + v.to_s + "!=" + b_h[k].to_s + "\n"
             end
           }
