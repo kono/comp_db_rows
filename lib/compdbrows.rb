@@ -8,7 +8,6 @@ require 'dbi'
 require 'optparse'
 
 class CompDbRows
-  attr_reader :yaml,:dsn,:user,:pwd,:ignore,:only
  
   def initialize(yaml,ignore_list)
     @ignore_list=ignore_list
