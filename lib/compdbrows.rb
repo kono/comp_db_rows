@@ -69,10 +69,13 @@ class CompDbRows
       result_b = getcountrows(dbh_b, table_b)
       
      if result_a == result_b then
-        puts 'Record counts matches.'
+        puts 'Record counts matches.(' +result_a.to_s + ')'
         ret=true
       else
         puts '###Record counts unmatches!###'
+        puts 'table_a:'+result_a.to_s
+        puts 'table_b:'+result_b.to_s
+        puts 'Data compare function is not executed.'
       end
     rescue=>e
       print e.message
@@ -176,7 +179,7 @@ if File.basename($0).downcase == 'compdbrows.rb' then
   t0=ARGV[0]
   t1=ARGV[1]
 
-  proc.checkRcdCount(t0,t1)
-  proc.compareRows(t0,t1)
+  proc.compareRows(t0,t1) if proc.checkRcdCount(t0,t1)
+
 end
 
