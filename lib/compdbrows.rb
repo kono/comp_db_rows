@@ -71,6 +71,11 @@ class CompDbRows
      if result_a == result_b then
         puts 'Record counts matches.(' +result_a.to_s + ')'
         ret=true
+        if result_a >= 1000000 then
+          puts '##ERROR## But it is too large number'
+          puts 'to execute data compare function.(>=1000000)'
+          ret = false
+        end
       else
         puts '###Record counts unmatches!###'
         puts 'table_a:'+result_a.to_s

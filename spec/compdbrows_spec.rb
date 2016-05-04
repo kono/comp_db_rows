@@ -32,6 +32,19 @@ RSpec.describe CompDbRows do
     expect(target2.checkRcdCount("table_A", "table_B")).to eq true
   end
   
+  it 'can cancel execution when  the number of rows of "table_A" is too big' do
+    dbh_mock=double('dbh')
+    allow(DBI).to receive(:connect).with('DBI:ODBC:rspectest','testuser','testpwd').and_return(dbh_mock)
+    sth_mock=double('sth')
+    allow(dbh_mock).to receive(:execute).with('select count(*) as count from table_A').and_return(sth_mock)
+    allow(dbh_mock).to receive(:execute).with('select count(*) as count from table_B').and_return(sth_mock)
+    allow(dbh_mock).to receive(:disconnect)
+    count=['1000000']
+    allow(sth_mock).to receive(:fetch).and_return(count)
+    allow(sth_mock).to receive(:finish)
+    expect(target2.checkRcdCount("table_A", "table_B")).to eq false
+  end
+  
   it 'can compare the number of rows of "table_A" and that of "table_B" when they do not match' do
     dbh_mock=double('dbh')
     allow(DBI).to receive(:connect).with('DBI:ODBC:rspectest','testuser','testpwd').and_return(dbh_mock)
