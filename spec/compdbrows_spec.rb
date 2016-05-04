@@ -1,8 +1,8 @@
 require_relative '../lib/compdbrows'
 
 RSpec.describe CompDbRows do
-  let(:target1) { CompDbRows.new('spec/compdbrows_spec1.yaml') }
-  let(:target2) { CompDbRows.new('spec/compdbrows_spec2.yaml') }
+  let(:target1) { CompDbRows.new('spec/compdbrows_spec1.yaml',[]) }
+  let(:target2) { CompDbRows.new('spec/compdbrows_spec2.yaml',[]) }
   
   it 'can connect to  DB server A and B when there are both yaml entries' do
     dbh_mock=double('dbh')
@@ -92,7 +92,7 @@ RSpec.describe CompDbRows do
     allow(sth_mock2).to receive(:fetch_hash) { inputs2.next}
     allow(sth_mock1).to receive(:finish)
     allow(sth_mock2).to receive(:finish)
-    expect(target2.compareRows("table_A","table_B",[])).to eq true
+    expect(target2.compareRows("table_A","table_B")).to eq true
   end
   
   it 'can compare the data of table_A and table_B when they do NOT have same data' do
@@ -114,6 +114,6 @@ RSpec.describe CompDbRows do
     allow(sth_mock2).to receive(:fetch_hash){ inputs2.next}
     allow(sth_mock1).to receive(:finish)
     allow(sth_mock2).to receive(:finish)
-    expect(target2.compareRows("table_A","table_B",[])).to eq false
+    expect(target2.compareRows("table_A","table_B")).to eq false
   end
 end

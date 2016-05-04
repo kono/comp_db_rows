@@ -1,10 +1,10 @@
 example_id                     | status | run_time        |
 ------------------------------ | ------ | --------------- |
-./spec/compdbrows_spec.rb[1:1] | passed | 0.01501 seconds |
-./spec/compdbrows_spec.rb[1:2] | passed | 0.001 seconds   |
-./spec/compdbrows_spec.rb[1:3] | passed | 0.004 seconds   |
-./spec/compdbrows_spec.rb[1:4] | passed | 0.002 seconds   |
-./spec/compdbrows_spec.rb[1:5] | passed | 0.002 seconds   |
-./spec/compdbrows_spec.rb[1:6] | passed | 0.00101 seconds |
-./spec/compdbrows_spec.rb[1:7] | passed | 0.004 seconds   |
-./spec/compdbrows_spec.rb[1:8] | passed | 0.007 seconds   |
+./spec/compdbrows_spec.rb[1:1] | passed | 0.0015 seconds  |
+./spec/compdbrows_spec.rb[1:2] | passed | 0.01801 seconds |
+./spec/compdbrows_spec.rb[1:3] | passed | 0.003 seconds   |
+./spec/compdbrows_spec.rb[1:4] | passed | 0.0045 seconds  |
+./spec/compdbrows_spec.rb[1:5] | passed | 0.0015 seconds  |
+./spec/compdbrows_spec.rb[1:6] | passed | 0.0015 seconds  |
+./spec/compdbrows_spec.rb[1:7] | passed | 0.002 seconds   |
+./spec/compdbrows_spec.rb[1:8] | passed | 0.00651 seconds |

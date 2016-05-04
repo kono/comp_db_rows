@@ -10,7 +10,8 @@ require 'optparse'
 class CompDbRows
   attr_reader :yaml,:dsn,:user,:pwd,:ignore,:only
  
-  def initialize(yaml)
+  def initialize(yaml,ignore_list)
+    @ignore_list=ignore_list
     conh = YAML.load(File.read(yaml))
     @dsn1 = conh['dsn1']
     @user1 = conh['user1']
@@ -84,7 +85,7 @@ class CompDbRows
   end
   
   
-  def getFullColumnName(table_a, ignore_list)
+  def getFullColumnName(table_a)
     begin
       dbh=dbcon1
       sql = 'select * from ' + table_a
@@ -100,7 +101,7 @@ class CompDbRows
   def getColumnsName(table_a,ignore_list)
     begin
       # 全フィールドのリストを作成。
-      ret_ar = getFullColumnName(table_a, ignore_list)
+      ret_ar = getFullColumnName(table_a)
       # 上記リストから無視フィールドを取り除く
       if !ignore_list.nil?
         ignore_list.each{|e|
@@ -114,22 +115,19 @@ class CompDbRows
     end
   end
   
-  def compareRows(table_a,table_b,ignore_list)
+  def compareRows(table_a,table_b)
     ret =true
     cnt=0
     begin
-      dbh1=DBI.connect('DBI:ODBC:' + @dsn1,@user1,@pwd1)
-      dbh2=DBI.connect('DBI:ODBC:' + @dsn2,@user2,@pwd2)
+      dbh_a,dbh_b = dbcon1,dbcon2
       
-      field_list = getColumnsName(table_a,ignore_list).join(',')
+      field_list = getColumnsName(table_a,@ignore_list).join(',')
 
       sql_a = 'select ' + field_list + ' from ' + table_a + " order by " + field_list
       sql_b = 'select ' + field_list + ' from ' + table_b + " order by " + field_list
       
-      p sql_a
-      
-      sth_a = dbh1.execute(sql_a)
-      sth_b = dbh2.execute(sql_b)
+      sth_a = dbh_a.execute(sql_a)
+      sth_b = dbh_b.execute(sql_b)
     
       while a_h=sth_a.fetch_hash do
         cnt += 1
@@ -149,6 +147,8 @@ class CompDbRows
     ensure
       sth_a.finish if sth_a
       sth_b.finish if sth_b
+      dbh_a.disconnect if dbh_a
+      dbh_b.disconnect if dbh_b
     end
     return ret
   end
@@ -162,7 +162,6 @@ if File.basename($0).downcase == 'compdbrows.rb' then
   opt.on('-y VAL'){|v| o[:yaml] = v}
   opt.on('-i VAL'){|v| o[:ignore]=v.split(',')}
   opt.on('-o VAL'){|v| o[:only]=v.split(',')}
-  #opt.on('-t VAL'){|v| o[:dat]=v}
   opt.parse!(ARGV)
   
   
@@ -172,20 +171,13 @@ if File.basename($0).downcase == 'compdbrows.rb' then
     exit(-1)
   end
   
-  #p o[:yaml]
 
-  proc=CompDbRows.new(o[:yaml])
+  proc=CompDbRows.new(o[:yaml],o[:ignore])
 
-  #dbh=DBI.connect('DBI:ODBC:' + conh['dsn'],conh['user'],conh['pwd'])
   t0=ARGV[0]
   t1=ARGV[1]
 
   proc.checkRcdCount(t0,t1)
-  proc.compareRows(t0,t1,o[:ignore])
+  proc.compareRows(t0,t1)
 end
 
-#if compRcd(dbh,'TEST_LOGIS_F580120','TEST_LOGIS_F580120_BAK') == false
-#  print 'contents unmatch'
-#else
-#  print 'contents match'
-#end
