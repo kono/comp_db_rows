@@ -122,6 +122,14 @@ class CompDbRows
     end
   end
   
+  def findColDiff(a_h, b_h,cnt)
+    a_h.each{|k,v|
+      if b_h[k] != v then
+        print "\nUNMATCH!  line(s):" + cnt.to_s + "| field: " + k + " | values(a != b) :" + v.to_s + "!=" + b_h[k].to_s + "\n"
+      end
+    }
+  end
+  
   def compareRows(table_a,table_b,max_errors)
     ret =true
     cnt=0
@@ -137,17 +145,13 @@ class CompDbRows
       sth_a = dbh_a.execute(sql_a)
       sth_b = dbh_b.execute(sql_b)
     
-      while a_h=sth_a.fetch_hash and errcnt <= max_errors do
+      while a_h=sth_a.fetch_hash and errcnt < max_errors do
         cnt += 1
         b_h = sth_b.fetch_hash
         if a_h != b_h
           ret = false
-          a_h.each{|k,v|
-            if b_h[k] != v then
-              errcnt += 1
-              print "\nUNMATCH!  line(s):" + cnt.to_s + "| field: " + k + " | values(a != b) :" + v.to_s + "!=" + b_h[k].to_s + "\n"
-            end
-          }
+          errcnt += 1
+          findColDiff(a_h,b_h,cnt)
         end
       end
     rescue=>e

@@ -129,4 +129,27 @@ RSpec.describe CompDbRows do
     allow(sth_mock2).to receive(:finish)
     expect(target2.compareRows("table_A","table_B",10)).to eq false
   end
+  
+  it 'can enumrate errors given number of times by parameter' do
+    dbh_mock=double('dbh')
+    allow(DBI).to receive(:connect).with('DBI:ODBC:rspectest','testuser','testpwd').and_return(dbh_mock)
+    sth_mock=double('sth')
+    allow(dbh_mock).to receive(:prepare).with('select * from table_A').and_return(sth_mock)
+    column_ar=['field0']
+    allow(sth_mock).to receive(:column_names).and_return(column_ar)
+    allow(dbh_mock).to receive(:disconnect)
+    allow(sth_mock).to receive(:finish)
+    inputs1 = [{'field0'=>0} ,{'field0'=>0} ,{'field0'=>0} ,{'field0'=>0} ,  nil].to_enum
+    inputs2 = [{'field0'=>1} ,{'field0'=>1} ,{'field0'=>1} ,{'field0'=>1} ,  nil].to_enum
+    sth_mock1=double('sth')
+    sth_mock2=double('sth')
+    allow(dbh_mock).to receive(:execute).with('select field0 from table_A order by field0').and_return(sth_mock1)
+    allow(sth_mock1).to receive(:fetch_hash){inputs1.next}
+    allow(dbh_mock).to receive(:execute).with('select field0 from table_B order by field0').and_return(sth_mock2)
+    allow(sth_mock2).to receive(:fetch_hash) { inputs2.next}
+    allow(sth_mock1).to receive(:finish)
+    allow(sth_mock2).to receive(:finish)
+    expect(target2).to receive(:findColDiff).with(anything, anything, anything).exactly(3).times
+    target2.compareRows("table_A","table_B",3)
+  end
 end
