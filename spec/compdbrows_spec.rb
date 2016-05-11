@@ -92,19 +92,19 @@ RSpec.describe CompDbRows do
     sth_mock=double('sth')
     allow(dbh_mock).to receive(:prepare).with('select * from table_A').and_return(sth_mock)
     column_ar=['field0','field1','field2']
-    allow(sth_mock).to receive(:column_names).and_return(column_ar)
+    allow(sth_mock).to receive(:column_names).ordered.and_return(column_ar)
     allow(dbh_mock).to receive(:disconnect)
-    allow(sth_mock).to receive(:finish)
+    allow(sth_mock).to receive(:finish).ordered
     inputs1 = [{'field0'=>0, 'field1'=>'a','field2'=>'bb'},{'field0'=>1,'field1'=>'b','field2'=>'cc'} , nil].to_enum
     inputs2 = [{'field0'=>0, 'field1'=>'a','field2'=>'bb'},{'field0'=>1,'field1'=>'b','field2'=>'cc'} , nil].to_enum
     sth_mock1=double('sth')
     sth_mock2=double('sth')
-    allow(dbh_mock).to receive(:execute).with('select field0,field1,field2 from table_A order by field0,field1,field2').and_return(sth_mock1)
-    allow(sth_mock1).to receive(:fetch_hash){inputs1.next}
-    allow(dbh_mock).to receive(:execute).with('select field0,field1,field2 from table_B order by field0,field1,field2').and_return(sth_mock2)
-    allow(sth_mock2).to receive(:fetch_hash) { inputs2.next}
-    allow(sth_mock1).to receive(:finish)
-    allow(sth_mock2).to receive(:finish)
+    expect(dbh_mock).to receive(:execute).with('select field0,field1,field2 from table_A order by field0,field1,field2').and_return(sth_mock1)
+    expect(sth_mock1).to receive(:fetch_hash).exactly(3).times {inputs1.next}
+    expect(dbh_mock).to receive(:execute).with('select field0,field1,field2 from table_B order by field0,field1,field2').and_return(sth_mock2)
+    expect(sth_mock2).to receive(:fetch_hash).exactly(2).times { inputs2.next}
+    expect(sth_mock1).to receive(:finish)
+    expect(sth_mock2).to receive(:finish)
     expect(target2.compareRows("table_A","table_B",10)).to eq true
   end
   
@@ -122,7 +122,7 @@ RSpec.describe CompDbRows do
     sth_mock1=double('sth')
     sth_mock2=double('sth')
     allow(dbh_mock).to receive(:execute).with('select field0,field1,field2 from table_A order by field0,field1,field2').and_return(sth_mock1)
-    allow(sth_mock1).to receive(:fetch_hash){ inputs1.next}
+    allow(sth_mock1).to receive(:fetch_hash) { inputs1.next}
     allow(dbh_mock).to receive(:execute).with('select field0,field1,field2 from table_B order by field0,field1,field2').and_return(sth_mock2)
     allow(sth_mock2).to receive(:fetch_hash){ inputs2.next}
     allow(sth_mock1).to receive(:finish)
