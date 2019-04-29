@@ -1,17 +1,17 @@
 
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "compdbdat/version"
+require "compdbrows/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "compdbdat"
-  spec.version       = Compdbdat::VERSION
+  spec.name          = "compdbrows"
+  spec.version       = Compdbrows::VERSION
   spec.authors       = ["Hiroshi Kono"]
   spec.email         = ["hiroshi.kono@gmail.com"]
 
   spec.summary       = %q{Compare two sql results}
   spec.description   = %q{Compaare two sql results}
-  spec.homepage      = "https://github.com/kono/compdbdat"
+  spec.homepage      = "https://github.com/kono/compdbrows"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
@@ -20,8 +20,8 @@ Gem::Specification.new do |spec|
     spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
 
     spec.metadata["homepage_uri"] = spec.homepage
-    spec.metadata["source_code_uri"] = "https://github.com/kono/compdbdat"
-    spec.metadata["changelog_uri"] = "https://github.com/kono/compdbdat"
+    spec.metadata["source_code_uri"] = "https://github.com/kono/compdbrows"
+    spec.metadata["changelog_uri"] = "https://github.com/kono/compdbrows"
   else
     raise "RubyGems 2.0 or newer is required to protect against " \
       "public gem pushes."

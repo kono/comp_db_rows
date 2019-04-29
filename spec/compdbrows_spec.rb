@@ -1,10 +1,10 @@
-RSpec.describe Compdbdat do
+RSpec.describe Compdbrows do
   let(:target1) { CompDbRows.new('spec/compdbrows_spec1.yaml',[]) }
   let(:target2) { CompDbRows.new('spec/compdbrows_spec2.yaml',[]) }
 
 
   it "has a version number" do
-    expect(Compdbdat::VERSION).not_to be nil
+    expect(Compdbrows::VERSION).not_to be nil
   end
 
   it 'can connect to  DB server A and B when there are both yaml entries' do

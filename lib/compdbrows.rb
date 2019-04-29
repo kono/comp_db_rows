@@ -1,7 +1,7 @@
 require 'yaml'
 require 'dbi'
 require 'optparse'
-require "compdbdat/version"
+require "compdbrows/version"
 
 # module Compdbdat
   class Error < StandardError; end
