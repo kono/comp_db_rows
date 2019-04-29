@@ -1,9 +1,12 @@
-require_relative '../lib/compdbrows'
-
-RSpec.describe CompDbRows do
+RSpec.describe Compdbdat do
   let(:target1) { CompDbRows.new('spec/compdbrows_spec1.yaml',[]) }
   let(:target2) { CompDbRows.new('spec/compdbrows_spec2.yaml',[]) }
-  
+
+
+  it "has a version number" do
+    expect(Compdbdat::VERSION).not_to be nil
+  end
+
   it 'can connect to  DB server A and B when there are both yaml entries' do
     dbh_mock=double('dbh')
     allow(DBI).to receive(:connect).with('DBI:ODBC:rspectest','testuser','testpwd').and_return(dbh_mock)
@@ -152,4 +155,5 @@ RSpec.describe CompDbRows do
     expect(target2).to receive(:findColDiff).with(anything, anything, anything).exactly(3).times
     target2.compareRows("table_A","table_B",3)
   end
+
 end

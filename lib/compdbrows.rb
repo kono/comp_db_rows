@@ -1,197 +1,199 @@
-# -*- mode:ruby; coding:shift_jis -*-
-#
-# compdbrows.rb
-#
-
 require 'yaml'
 require 'dbi'
 require 'optparse'
+require "compdbdat/version"
 
-class CompDbRows
+# module Compdbdat
+  class Error < StandardError; end
  
-  def initialize(yaml,ignore_list)
-    @ignore_list=ignore_list
-    conh = YAML.load(File.read(yaml))
-    @dsn1 = conh['dsn1']
-    @user1 = conh['user1']
-    @pwd1 = conh['pwd1']
-    @dsn2 = getdsn2(conh)
-    @user2 = getuser2(conh)
-    @pwd2 = getpwd2(conh)
-  end
   
-  def getdsn2(conh)
-    if !conh['dsn2'].nil?
-      getdsn2 = conh['dsn2']
-    else
-      getdsn2 = conh['dsn1']
+  class CompDbRows
+   
+    def initialize(yaml,ignore_list)
+      @ignore_list=ignore_list
+      conh = YAML.load(File.read(yaml))
+      @dsn1 = conh['dsn1']
+      @user1 = conh['user1']
+      @pwd1 = conh['pwd1']
+      @dsn2 = getdsn2(conh)
+      @user2 = getuser2(conh)
+      @pwd2 = getpwd2(conh)
     end
-  end
-  
-  def getuser2(conh)
-    if !conh['user2'].nil?
-      getuser2 = conh['user2']
-    else
-      getuser2 = conh['user1']
-    end
-  end
-  
-  def getpwd2(conh)
-        if !conh['pwd2'].nil?
-      getpwd2 = conh['pwd2']
-    else
-      getpwd2 = conh['pwd1']
-    end
-  end
     
-  def dbcon1
-    DBI.connect("DBI:ODBC:#{@dsn1}",@user1,@pwd1)
-  end
-  
-  def dbcon2
-    DBI.connect("DBI:ODBC:#{@dsn2}",@user2,@pwd2)
-  end
-  
-  def getcountrows(dbh,table)
-    sql = 'select count(*) as count from ' + table
-    sth = dbh.execute(sql)
-    getcountrows = sth.fetch.to_a[0].to_i
-    sth.finish
-    return getcountrows
-  end
-  
-  def checkRcdCount(table_a, table_b)
-    ret=false
-    begin
-      dbh_a,dbh_b = dbcon1,dbcon2
-      
-      result_a = getcountrows(dbh_a, table_a)
-      result_b = getcountrows(dbh_b, table_b)
-      
-     if result_a == result_b then
-        puts 'Record counts matches.(' +result_a.to_s + ')'
-        ret=true
-        if result_a >= 1000000 then
-          puts '##ERROR## But it is too large number'
-          puts 'to execute data compare function.(>=1000000)'
-          ret = false
-        end
+    def getdsn2(conh)
+      if !conh['dsn2'].nil?
+        getdsn2 = conh['dsn2']
       else
-        puts '###Record counts unmatches!###'
-        puts 'table_a:'+result_a.to_s
-        puts 'table_b:'+result_b.to_s
-        puts 'Data compare function is not executed.'
+        getdsn2 = conh['dsn1']
       end
-    rescue=>e
-      print e.message
-    ensure
-      dbh_a.disconnect if dbh_a
-      dbh_b.disconnect if dbh_b
     end
-    return ret
-  end
-  
-  
-  def getFullColumnName(table_a)
-    begin
-      dbh=dbcon1
-      sql = 'select * from ' + table_a
-      sth = dbh.prepare(sql)
-      ret_ar=sth.column_names
-      return ret_ar
-    ensure
-      sth.finish if sth
-      dbh.disconnect if dbh
-    end
-   end
-  # ”äŠr‚·‚éƒe[ƒuƒ‹‚ÌƒtƒB[ƒ‹ƒhˆê——‚ðì¬
-  def getColumnsName(table_a,ignore_list)
-    begin
-      # ‘SƒtƒB[ƒ‹ƒh‚ÌƒŠƒXƒg‚ðì¬B
-      ret_ar = getFullColumnName(table_a)
-      # ã‹LƒŠƒXƒg‚©‚ç–³Ž‹ƒtƒB[ƒ‹ƒh‚ðŽæ‚èœ‚­
-      if !ignore_list.nil?
-        ignore_list.each{|e|
-          ret_ar.delete(e)
-        }
-      end
-      return ret_ar
-    rescue=>e
-      print e.message
-      print e.backtrace.join("\n")
-    end
-  end
-  
-  def findColDiff(a_h, b_h,cnt)
-    a_h.each{|k,v|
-      if b_h[k] != v then
-        print "\nUNMATCH!  line(s):" + cnt.to_s + "| field: " + k + " | values(a != b) :" + v.to_s + "!=" + b_h[k].to_s + "\n"
-      end
-    }
-  end
-  
-  def compareRows(table_a,table_b,max_errors)
-    ret =true
-    cnt=0
-    errcnt = 0
-    begin
-      dbh_a,dbh_b = dbcon1,dbcon2
-      
-      field_list = getColumnsName(table_a,@ignore_list).join(',')
-
-      sql_a = 'select ' + field_list + ' from ' + table_a + " order by " + field_list
-      sql_b = 'select ' + field_list + ' from ' + table_b + " order by " + field_list
-      
-      sth_a = dbh_a.execute(sql_a)
-      sth_b = dbh_b.execute(sql_b)
     
-      while a_h=sth_a.fetch_hash and errcnt < max_errors do
-        cnt += 1
-        b_h = sth_b.fetch_hash
-        if a_h != b_h
-          ret = false
-          errcnt += 1
-          findColDiff(a_h,b_h,cnt)
-        end
+    def getuser2(conh)
+      if !conh['user2'].nil?
+        getuser2 = conh['user2']
+      else
+        getuser2 = conh['user1']
       end
-    rescue=>e
-      print e.message
-      print e.backtrace.join("\n")
-    ensure
-      sth_a.finish if sth_a
-      sth_b.finish if sth_b
-      dbh_a.disconnect if dbh_a
-      dbh_b.disconnect if dbh_b
     end
-    return ret
+    
+    def getpwd2(conh)
+          if !conh['pwd2'].nil?
+        getpwd2 = conh['pwd2']
+      else
+        getpwd2 = conh['pwd1']
+      end
+    end
+      
+    def dbcon1
+      DBI.connect("DBI:ODBC:#{@dsn1}",@user1,@pwd1)
+    end
+    
+    def dbcon2
+      DBI.connect("DBI:ODBC:#{@dsn2}",@user2,@pwd2)
+    end
+    
+    def getcountrows(dbh,table)
+      sql = 'select count(*) as count from ' + table
+      sth = dbh.execute(sql)
+      getcountrows = sth.fetch.to_a[0].to_i
+      sth.finish
+      return getcountrows
+    end
+    
+    def checkRcdCount(table_a, table_b)
+      ret=false
+      begin
+        dbh_a,dbh_b = dbcon1,dbcon2
+        
+        result_a = getcountrows(dbh_a, table_a)
+        result_b = getcountrows(dbh_b, table_b)
+        
+       if result_a == result_b then
+          puts 'Record counts matches.(' +result_a.to_s + ')'
+          ret=true
+          if result_a >= 1000000 then
+            puts '##ERROR## But it is too large number'
+            puts 'to execute data compare function.(>=1000000)'
+            ret = false
+          end
+        else
+          puts '###Record counts unmatches!###'
+          puts 'table_a:'+result_a.to_s
+          puts 'table_b:'+result_b.to_s
+          puts 'Data compare function is not executed.'
+        end
+      rescue=>e
+        print e.message
+      ensure
+        dbh_a.disconnect if dbh_a
+        dbh_b.disconnect if dbh_b
+      end
+      return ret
+    end
+    
+    
+    def getFullColumnName(table_a)
+      begin
+        dbh=dbcon1
+        sql = 'select * from ' + table_a
+        sth = dbh.prepare(sql)
+        ret_ar=sth.column_names
+        return ret_ar
+      ensure
+        sth.finish if sth
+        dbh.disconnect if dbh
+      end
+     end
+    # æ¯”è¼ƒã™ã‚‹ãƒ†ãƒ¼ãƒ–ãƒ«ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ä¸€è¦§ã‚’ä½œæˆ
+    def getColumnsName(table_a,ignore_list)
+      begin
+        # å…¨ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®ãƒªã‚¹ãƒˆã‚’ä½œæˆã€‚
+        ret_ar = getFullColumnName(table_a)
+        # ä¸Šè¨˜ãƒªã‚¹ãƒˆã‹ã‚‰ç„¡è¦–ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚’å–ã‚Šé™¤ã
+        if !ignore_list.nil?
+          ignore_list.each{|e|
+            ret_ar.delete(e)
+          }
+        end
+        return ret_ar
+      rescue=>e
+        print e.message
+        print e.backtrace.join("\n")
+      end
+    end
+    
+    def findColDiff(a_h, b_h,cnt)
+      a_h.each{|k,v|
+        if b_h[k] != v then
+          print "\nUNMATCH!  line(s):" + cnt.to_s + "| field: " + k + " | values(a != b) :" + v.to_s + "!=" + b_h[k].to_s + "\n"
+        end
+      }
+    end
+    
+    def compareRows(table_a,table_b,max_errors)
+      ret =true
+      cnt=0
+      errcnt = 0
+      begin
+        dbh_a,dbh_b = dbcon1,dbcon2
+        
+        field_list = getColumnsName(table_a,@ignore_list).join(',')
+  
+        sql_a = 'select ' + field_list + ' from ' + table_a + " order by " + field_list
+        sql_b = 'select ' + field_list + ' from ' + table_b + " order by " + field_list
+        
+        sth_a = dbh_a.execute(sql_a)
+        sth_b = dbh_b.execute(sql_b)
+      
+        while a_h=sth_a.fetch_hash and errcnt < max_errors do
+          cnt += 1
+          b_h = sth_b.fetch_hash
+          if a_h != b_h
+            ret = false
+            errcnt += 1
+            findColDiff(a_h,b_h,cnt)
+          end
+        end
+      rescue=>e
+        print e.message
+        print e.backtrace.join("\n")
+      ensure
+        sth_a.finish if sth_a
+        sth_b.finish if sth_b
+        dbh_a.disconnect if dbh_a
+        dbh_b.disconnect if dbh_b
+      end
+      return ret
+    end
+    
+  end    
+  # Your code goes here...
+# end
+  ##########################################################
+  # Main routine
+  if File.basename($0).downcase == 'compdbrows.rb' then
+    opt = OptionParser.new
+    o = Hash.new
+    opt.on('-y VAL'){|v| o[:yaml] = v}
+    opt.on('-i VAL'){|v| o[:ignore]=v.split(',')}
+    opt.on('-o VAL'){|v| o[:only]=v.split(',')}
+    opt.parse!(ARGV)
+    
+    
+    if !(o[:yaml]) then
+      print "invalid parameter(s).\n"
+      print "compdbrows.rb -y (yaml_file)\n"
+      exit(-1)
+    end
+    
+  
+    proc=CompDbRows.new(o[:yaml],o[:ignore])
+  
+    t0=ARGV[0]
+    t1=ARGV[1]
+    
+    max_errors=10
+    proc.compareRows(t0,t1,max_errors) if proc.checkRcdCount(t0,t1)
+  
   end
-  
-end    
-##########################################################
-# Main routine
-if File.basename($0).downcase == 'compdbrows.rb' then
-  opt = OptionParser.new
-  o = Hash.new
-  opt.on('-y VAL'){|v| o[:yaml] = v}
-  opt.on('-i VAL'){|v| o[:ignore]=v.split(',')}
-  opt.on('-o VAL'){|v| o[:only]=v.split(',')}
-  opt.parse!(ARGV)
-  
-  
-  if !(o[:yaml]) then
-    print "invalid parameter(s).\n"
-    print "compdbrows.rb -y (yaml_file)\n"
-    exit(-1)
-  end
-  
-
-  proc=CompDbRows.new(o[:yaml],o[:ignore])
-
-  t0=ARGV[0]
-  t1=ARGV[1]
-  
-  max_errors=10
-  proc.compareRows(t0,t1,max_errors) if proc.checkRcdCount(t0,t1)
-
-end
 

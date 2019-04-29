@@ -1,7 +1,7 @@
-# A sample Gemfile
 source "https://rubygems.org"
 
-gem "rspec", ">=3.0.0"
+# Specify your gem's dependencies in compdbdat.gemspec
+gemspec
 gem "dbi"
 gem "dbd-odbc"
 gem "ruby-odbc"
