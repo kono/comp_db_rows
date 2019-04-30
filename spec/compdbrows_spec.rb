@@ -95,9 +95,9 @@ RSpec.describe Compdbrows do
     sth_mock=double('sth')
     allow(dbh_mock).to receive(:prepare).with('select * from table_A').and_return(sth_mock)
     column_ar=['field0','field1','field2']
-    allow(sth_mock).to receive(:column_names).ordered.and_return(column_ar)
+    allow(sth_mock).to receive(:column_names).and_return(column_ar)
     allow(dbh_mock).to receive(:disconnect)
-    allow(sth_mock).to receive(:finish).ordered
+    allow(sth_mock).to receive(:finish)
     inputs1 = [{'field0'=>0, 'field1'=>'a','field2'=>'bb'},{'field0'=>1,'field1'=>'b','field2'=>'cc'} , nil].to_enum
     inputs2 = [{'field0'=>0, 'field1'=>'a','field2'=>'bb'},{'field0'=>1,'field1'=>'b','field2'=>'cc'} , nil].to_enum
     sth_mock1=double('sth')
