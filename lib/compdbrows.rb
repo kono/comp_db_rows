@@ -1,5 +1,4 @@
 require 'yaml'
-require 'dbi'
 require 'odbc'
 require 'optparse'
 require "compdbrows/version"
