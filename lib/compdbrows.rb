@@ -1,5 +1,6 @@
 require 'yaml'
 require 'dbi'
+require 'odbc'
 require 'optparse'
 require "compdbrows/version"
 
@@ -45,18 +46,18 @@ require "compdbrows/version"
     end
       
     def dbcon1
-      DBI.connect("DBI:ODBC:#{@dsn1}",@user1,@pwd1)
+      ODBC.connect(@dsn1,@user1,@pwd1)
     end
     
     def dbcon2
-      DBI.connect("DBI:ODBC:#{@dsn2}",@user2,@pwd2)
+      ODBC.connect(@dsn2,@user2,@pwd2)
     end
     
     def getcountrows(dbh,table)
       sql = 'select count(*) as count from ' + table
-      sth = dbh.execute(sql)
+      sth = dbh.run(sql)
       getcountrows = sth.fetch.to_a[0].to_i
-      sth.finish
+      sth.drop
       return getcountrows
     end
     
@@ -97,10 +98,10 @@ require "compdbrows/version"
         dbh=dbcon1
         sql = 'select * from ' + table_a
         sth = dbh.prepare(sql)
-        ret_ar=sth.column_names
+        ret_ar=sth.columns.keys
         return ret_ar
       ensure
-        sth.finish if sth
+        sth.drop if sth
         dbh.disconnect if dbh
       end
      end
@@ -142,8 +143,8 @@ require "compdbrows/version"
         sql_a = 'select ' + field_list + ' from ' + table_a + " order by " + field_list
         sql_b = 'select ' + field_list + ' from ' + table_b + " order by " + field_list
         
-        sth_a = dbh_a.execute(sql_a)
-        sth_b = dbh_b.execute(sql_b)
+        sth_a = dbh_a.run(sql_a)
+        sth_b = dbh_b.run(sql_b)
       
         while a_h=sth_a.fetch_hash and errcnt < max_errors do
           cnt += 1
@@ -158,8 +159,8 @@ require "compdbrows/version"
         print e.message
         print e.backtrace.join("\n")
       ensure
-        sth_a.finish if sth_a
-        sth_b.finish if sth_b
+        sth_a.drop if sth_a
+        sth_b.drop if sth_b
         dbh_a.disconnect if dbh_a
         dbh_b.disconnect if dbh_b
       end
