@@ -1,6 +1,6 @@
 RSpec.describe Compdbrows do
-  let(:target1) { CompDbRows.new('spec/compdbrows_spec1.yaml',[]) }
-  let(:target2) { CompDbRows.new('spec/compdbrows_spec2.yaml',[]) }
+  let(:target1) { Compdbrows::Compdbrows.new('spec/compdbrows_spec1.yaml',[]) }
+  let(:target2) { Compdbrows::Compdbrows.new('spec/compdbrows_spec2.yaml',[]) }
 
 
   it "has a version number" do

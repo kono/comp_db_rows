@@ -3,11 +3,11 @@ require 'odbc'
 require 'optparse'
 require "compdbrows/version"
 
-# module Compdbdat
+module Compdbrows
   class Error < StandardError; end
  
   
-  class CompDbRows
+  class Compdbrows
    
     def initialize(yaml,ignore_list)
       @ignore_list=ignore_list
@@ -168,7 +168,7 @@ require "compdbrows/version"
     
   end    
   # Your code goes here...
-# end
+ end
   ##########################################################
   # Main routine
   if File.basename($0).downcase == 'compdbrows.rb' then
@@ -182,12 +182,12 @@ require "compdbrows/version"
     
     if !(o[:yaml]) then
       print "invalid parameter(s).\n"
-      print "compdbrows.rb -y (yaml_file)\n"
+      print "ruby compdbrows.rb -y (yaml_file)\n"
       exit(-1)
     end
     
   
-    proc=CompDbRows.new(o[:yaml],o[:ignore])
+    proc=Compdbrows.new(o[:yaml],o[:ignore])
   
     t0=ARGV[0]
     t1=ARGV[1]
