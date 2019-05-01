@@ -12,9 +12,9 @@ module Compdbrows
             
             
             if !(o[:yaml]) then
-            print "invalid parameter(s).\n"
-            print "compdbrows -y (yaml_file)\n table1 table2"
-            exit(-1)
+                print "invalid parameter(s).\n"
+                print "compdbrows -y (yaml_file) table1 table2"
+                exit(-1)
             end
         
             proc=Compdbrows.new(o[:yaml],o[:ignore])
