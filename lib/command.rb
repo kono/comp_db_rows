@@ -13,7 +13,7 @@ module Compdbrows
             
             if !(o[:yaml]) then
             print "invalid parameter(s).\n"
-            print "ruby compdbrows.rb -y (yaml_file)\n"
+            print "compdbrows -y (yaml_file)\n table1 table2"
             exit(-1)
             end
         

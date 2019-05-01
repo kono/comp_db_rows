@@ -170,31 +170,4 @@ module Compdbrows
   end    
   # Your code goes here...
  end
-  ##########################################################
-  # Main routine
-  if File.basename($0).downcase == 'compdbrows.rb' then
-    opt = OptionParser.new
-    o = Hash.new
-    opt.on('-y VAL'){|v| o[:yaml] = v}
-    opt.on('-i VAL'){|v| o[:ignore]=v.split(',')}
-    opt.on('-o VAL'){|v| o[:only]=v.split(',')}
-    opt.parse!(ARGV)
-    
-    
-    if !(o[:yaml]) then
-      print "invalid parameter(s).\n"
-      print "ruby compdbrows.rb -y (yaml_file)\n"
-      exit(-1)
-    end
-    
-  
-    proc=Compdbrows.new(o[:yaml],o[:ignore])
-  
-    t0=ARGV[0]
-    t1=ARGV[1]
-    
-    max_errors=10
-    proc.compareRows(t0,t1,max_errors) if proc.checkRcdCount(t0,t1)
-  
-  end
-
+ 
