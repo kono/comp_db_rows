@@ -1,7 +1,8 @@
 require 'yaml'
 require 'odbc'
 require 'optparse'
-require "compdbrows/version"
+require_relative "compdbrows/version"
+require_relative 'command'
 
 module Compdbrows
   class Error < StandardError; end
