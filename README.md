@@ -1,9 +1,9 @@
 # compdbrows
 Ruby script to compare the data of two tables of RDBMS whose sql does not have 'except' operator.
 It works on windows environment.
-It requires ruby/dbi, dbd-odbc, ruby-odbc gems.
+It requires ruby-odbc gems.
 # examples
-    ruby compdbrows.rb -y (yaml file) table_A table_B
+    compdbrows -y (yaml file) table_A table_B
 Configure odbc settings and write yaml file previously.
 Yaml file has settings of odbc datasource, username and password of each RDBMS.
 (If both tables are on same DBMS, you don't need to set dsn2, user2, pwd2 in yaml file.
