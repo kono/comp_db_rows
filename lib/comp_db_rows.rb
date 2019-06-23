@@ -130,6 +130,10 @@ module CompDbRows
         end
       }
     end
+
+    def getsql(field_list,tablename)
+      'select ' + field_list + ' from ' + tablename + " order by " + field_list
+    end
     
     def compareRows(table_a,table_b,max_errors)
       ret =true
@@ -137,11 +141,11 @@ module CompDbRows
       errcnt = 0
       begin
         dbh_a,dbh_b = dbcon1,dbcon2
+
+        field_list = getColumnsName(table_a, @ignore_list).join(',')
         
-        field_list = getColumnsName(table_a,@ignore_list).join(',')
-  
-        sql_a = 'select ' + field_list + ' from ' + table_a + " order by " + field_list
-        sql_b = 'select ' + field_list + ' from ' + table_b + " order by " + field_list
+        sql_a = getsql(field_list, table_a)
+        sql_b = getsql(field_list, table_b)
         
         sth_a = dbh_a.run(sql_a)
         sth_b = dbh_b.run(sql_b)
