@@ -94,6 +94,7 @@ RSpec.describe CompDbRows do
     allow(ODBC).to receive(:connect).with('rspectest','testuser','testpwd').and_return(dbh_mock)
     sth_mock=double('sth')
     allow(dbh_mock).to receive(:prepare).with('select * from table_A').and_return(sth_mock)
+    allow(dbh_mock).to receive(:prepare).with('select * from table_B').and_return(sth_mock)
     column_hash={'field0'=>nil,'field1'=>nil,'field2'=>nil}
     allow(sth_mock).to receive(:columns).and_return(column_hash)
     allow(dbh_mock).to receive(:disconnect)
@@ -116,6 +117,7 @@ RSpec.describe CompDbRows do
     allow(ODBC).to receive(:connect).with('rspectest','testuser','testpwd').and_return(dbh_mock)
     sth_mock=double('sth')
     allow(dbh_mock).to receive(:prepare).with('select * from table_A').and_return(sth_mock)
+    allow(dbh_mock).to receive(:prepare).with('select * from table_B').and_return(sth_mock)
     column_hash={'field0'=>nil,'field1'=>nil,'field2'=>nil}
     allow(sth_mock).to receive(:columns).and_return(column_hash)
     allow(dbh_mock).to receive(:disconnect)
@@ -138,6 +140,7 @@ RSpec.describe CompDbRows do
     allow(ODBC).to receive(:connect).with('rspectest','testuser','testpwd').and_return(dbh_mock)
     sth_mock=double('sth')
     allow(dbh_mock).to receive(:prepare).with('select * from table_A').and_return(sth_mock)
+    allow(dbh_mock).to receive(:prepare).with('select * from table_B').and_return(sth_mock)
     column_hash={'field0'=>nil}
     allow(sth_mock).to receive(:columns).and_return(column_hash)
     allow(dbh_mock).to receive(:disconnect)

@@ -131,7 +131,8 @@ module CompDbRows
       }
     end
 
-    def getsql(field_list,tablename)
+    def getsql(tablename)
+      field_list = getColumnsName(tablename, @ignore_list).join(',')
       'select ' + field_list + ' from ' + tablename + " order by " + field_list
     end
     
@@ -142,10 +143,9 @@ module CompDbRows
       begin
         dbh_a,dbh_b = dbcon1,dbcon2
 
-        field_list = getColumnsName(table_a, @ignore_list).join(',')
         
-        sql_a = getsql(field_list, table_a)
-        sql_b = getsql(field_list, table_b)
+        sql_a = getsql(table_a)
+        sql_b = getsql(table_b)
         
         sth_a = dbh_a.run(sql_a)
         sth_b = dbh_b.run(sql_b)
