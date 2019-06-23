@@ -1,7 +1,7 @@
 require 'yaml'
 require 'odbc'
 require 'optparse'
-require_relative "compdbrows/version"
+require_relative "comp_db_rows/version"
 require_relative 'command'
 
 module Compdbrows
