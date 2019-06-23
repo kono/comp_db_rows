@@ -1,5 +1,5 @@
 require "bundler/setup"
-require "compdbrows"
+require "comp_db_rows"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
