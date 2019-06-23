@@ -4,11 +4,11 @@ require 'optparse'
 require_relative "comp_db_rows/version"
 require_relative 'command'
 
-module Compdbrows
+module CompDbRows
   class Error < StandardError; end
  
   
-  class Compdbrows
+  class CompDbRows
    
     def initialize(yaml,ignore_list)
       @ignore_list=ignore_list

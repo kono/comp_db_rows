@@ -1,6 +1,6 @@
 require 'optparse'
 
-module Compdbrows
+module CompDbRows
     class Command
         def self.exec(argv)
             opt = OptionParser.new
@@ -17,7 +17,7 @@ module Compdbrows
                 exit(-1)
             end
         
-            proc=Compdbrows.new(o[:yaml],o[:ignore])
+            proc=CompDbRows.new(o[:yaml],o[:ignore])
         
             t0=argv[0]
             t1=argv[1]

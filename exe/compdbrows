@@ -2,4 +2,4 @@
 
 require "compdbrows"
 
-Compdbrows::Command.exec(ARGV)
+CompDbRows::Command.exec(ARGV)

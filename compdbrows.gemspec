@@ -1,11 +1,11 @@
 
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "compdbrows/version"
+require "comp_db_rows/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "compdbrows"
-  spec.version       = Compdbrows::VERSION
+  spec.version       = CompDbRows::VERSION
   spec.authors       = ["Hiroshi Kono"]
   spec.email         = ["hiroshi.kono@gmail.com"]
 
