@@ -23,7 +23,7 @@ module CompDbRows
             t1=argv[1]
             
             max_errors=10
-            proc.compareRows(t0,t1,max_errors) if proc.checkRcdCount(t0,t1)
+            proc.compareRows(t0,t1,max_errors) 
         end
     end
 end

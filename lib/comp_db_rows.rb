@@ -150,6 +150,9 @@ module CompDbRows
     end
     
     def compareRows(table_a,table_b,max_errors)
+      if @compsql.nil? and checkRcdCount(table_a,table_b)==false
+        exit(-1)
+      end
       ret =true
       cnt=0
       errcnt = 0

@@ -93,6 +93,18 @@ RSpec.describe CompDbRows do
   it 'can compare the data of table_A and table_B when they have same data' do
     dbh_mock=double('dbh')
     allow(ODBC).to receive(:connect).with('rspectest','testuser','testpwd').and_return(dbh_mock)
+
+    sth_mock1=double('sth')
+    sth_mock2=double('sth')
+    allow(dbh_mock).to receive(:run).with('select count(*) as count from table_A').and_return(sth_mock1)
+    allow(dbh_mock).to receive(:run).with('select count(*) as count from table_B').and_return(sth_mock2)
+    allow(dbh_mock).to receive(:disconnect)
+    count1=[1234]
+    allow(sth_mock1).to receive(:fetch).and_return(count1)
+    allow(sth_mock2).to receive(:fetch).and_return(count1)
+    allow(sth_mock1).to receive(:drop)
+    allow(sth_mock2).to receive(:drop)
+
     sth_mock=double('sth')
     allow(dbh_mock).to receive(:prepare).with('select * from table_A').and_return(sth_mock)
     allow(dbh_mock).to receive(:prepare).with('select * from table_B').and_return(sth_mock)
@@ -116,6 +128,18 @@ RSpec.describe CompDbRows do
   it 'can compare the data of table_A and table_B when they do NOT have same data' do
     dbh_mock=double('dbh')
     allow(ODBC).to receive(:connect).with('rspectest','testuser','testpwd').and_return(dbh_mock)
+
+    sth_mock1=double('sth')
+    sth_mock2=double('sth')
+    allow(dbh_mock).to receive(:run).with('select count(*) as count from table_A').and_return(sth_mock1)
+    allow(dbh_mock).to receive(:run).with('select count(*) as count from table_B').and_return(sth_mock2)
+    allow(dbh_mock).to receive(:disconnect)
+    count1=[1234]
+    allow(sth_mock1).to receive(:fetch).and_return(count1)
+    allow(sth_mock2).to receive(:fetch).and_return(count1)
+    allow(sth_mock1).to receive(:drop)
+    allow(sth_mock2).to receive(:drop)
+
     sth_mock=double('sth')
     allow(dbh_mock).to receive(:prepare).with('select * from table_A').and_return(sth_mock)
     allow(dbh_mock).to receive(:prepare).with('select * from table_B').and_return(sth_mock)
@@ -139,6 +163,18 @@ RSpec.describe CompDbRows do
   it 'can enumrate errors given number of times by parameter' do
     dbh_mock=double('dbh')
     allow(ODBC).to receive(:connect).with('rspectest','testuser','testpwd').and_return(dbh_mock)
+
+    sth_mock1=double('sth')
+    sth_mock2=double('sth')
+    allow(dbh_mock).to receive(:run).with('select count(*) as count from table_A').and_return(sth_mock1)
+    allow(dbh_mock).to receive(:run).with('select count(*) as count from table_B').and_return(sth_mock2)
+    allow(dbh_mock).to receive(:disconnect)
+    count1=[1234]
+    allow(sth_mock1).to receive(:fetch).and_return(count1)
+    allow(sth_mock2).to receive(:fetch).and_return(count1)
+    allow(sth_mock1).to receive(:drop)
+    allow(sth_mock2).to receive(:drop)
+
     sth_mock=double('sth')
     allow(dbh_mock).to receive(:prepare).with('select * from table_A').and_return(sth_mock)
     allow(dbh_mock).to receive(:prepare).with('select * from table_B').and_return(sth_mock)
