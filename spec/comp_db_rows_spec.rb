@@ -1,6 +1,7 @@
 RSpec.describe CompDbRows do
   let(:target1) { CompDbRows::CompDbRows.new('spec/comp_db_rows_spec1.yaml',[]) }
   let(:target2) { CompDbRows::CompDbRows.new('spec/comp_db_rows_spec2.yaml',[]) }
+  let(:target3) { CompDbRows::CompDbRows.new('spec/comp_db_rows_spec3.yaml', []) }
 
 
   it "has a version number" do
@@ -157,6 +158,18 @@ RSpec.describe CompDbRows do
     allow(sth_mock2).to receive(:drop)
     expect(target2).to receive(:findColDiff).with(anything, anything, anything).exactly(3).times
     target2.compareRows("table_A","table_B",3)
+  end
+
+  it 'can treat correctly compsql entry in yaml' do
+    dbh_mock=double('dbh')
+    allow(ODBC).to receive(:connect).with('rspectest','testuser','testpwd').and_return(dbh_mock)
+    sth_mock=double('sth')
+    column_hash={'field0'=>nil,'field1'=>nil,'field2'=>nil}
+    allow(dbh_mock).to receive(:prepare).with('select * from TableA').and_return(sth_mock)
+    allow(sth_mock).to receive(:columns).and_return(column_hash)
+    allow(dbh_mock).to receive(:disconnect)
+    allow(sth_mock).to receive(:drop)
+    expect(target3.getsql('TableA')).to eq 'select field1, field2, sum(field3) from TableA group by field1, field2 order by field1, field2' 
   end
 
 end

@@ -19,6 +19,7 @@ module CompDbRows
       @dsn2 = getdsn2(conh)
       @user2 = getuser2(conh)
       @pwd2 = getpwd2(conh)
+      @compsql = conh['compsql']
     end
     
     def getdsn2(conh)
@@ -131,9 +132,21 @@ module CompDbRows
       }
     end
 
-    def getsql(tablename)
+    def getsql_auto(tablename)
       field_list = getColumnsName(tablename, @ignore_list).join(',')
       'select ' + field_list + ' from ' + tablename + " order by " + field_list
+    end
+
+    def getsql_conf(tablename)
+      @compsql.gsub('[table]', tablename)
+    end
+
+    def getsql(tablename)
+      if @compsql.nil?
+        getsql_auto(tablename)
+      else
+        getsql_conf(tablename)
+      end
     end
     
     def compareRows(table_a,table_b,max_errors)
