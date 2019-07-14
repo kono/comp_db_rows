@@ -1,5 +1,6 @@
 require "bundler/setup"
 require "comp_db_rows"
+require "format_sql"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
