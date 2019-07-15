@@ -1,4 +1,4 @@
 dsn1: rspectest
 user1: testuser
 pwd1: testpwd
-compsql: select field1, field2, sum(field3) from [table] group by field1, field2 order by field1, field2
+compsql: select field1, field2, sum(field3) from [table]

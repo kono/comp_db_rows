@@ -3,6 +3,7 @@ require 'odbc'
 require 'optparse'
 require_relative "comp_db_rows/version"
 require_relative 'command'
+require_relative 'format_sql'
 
 module CompDbRows
   class Error < StandardError; end
@@ -138,7 +139,8 @@ module CompDbRows
     end
 
     def getsql_conf(tablename)
-      @compsql.gsub('[table]', tablename)
+      autosql = FormatSql.new(@compsql)
+      autosql.make_up_sql.gsub('[table]', tablename)
     end
 
     def getsql(tablename)
