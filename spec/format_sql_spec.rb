@@ -1,7 +1,6 @@
 RSpec.describe CompDbRows do
-    let(:target) { FormatSql.new('select fld1, sum(fld2) from [table] ') }
+    let(:target) { FormatSql.new('select Fld1, Fld2,Fld3,sum(fld11),sum(fld12) from [table] ') }
     it "can read sql" do
-        expect(target.instance_variable_get(:@sql)).to eq 'select fld1, sum(fld2) from [table] '
-        expect(target.get_select_fields).to eq ['fld1','sum(fld2)']
+        expect(target.get_select_fields).to eq ['Fld1','Fld2','Fld3','sum(fld11)','sum(fld12)']
     end
 end
