@@ -205,7 +205,10 @@ RSpec.describe CompDbRows do
     allow(sth_mock).to receive(:columns).and_return(column_hash)
     allow(dbh_mock).to receive(:disconnect)
     allow(sth_mock).to receive(:drop)
-    expect(target3.getsql('TableA')).to eq 'select field1, field2, sum(field3) from TableA  group by field1, field2 order by field1, field2' 
+    sql = 'select field1, field2, sum(field3) from TableA  group by field1, field2 order by field1, field2'
+
+    # split + joinで空白の数を調整している
+    expect(target3.getsql('TableA')).to eq sql.split("\s").join("\s")
   end
 
 end

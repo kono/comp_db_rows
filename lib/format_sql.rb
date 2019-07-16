@@ -41,7 +41,10 @@ class FormatSql
         group_by_columns_str = " group by " + @group_by_columns.join(", ")
         order_by_columns_str = " order by " + @group_by_columns.join(", ")
 
-        select_columns_str + " from [table] " + group_by_columns_str + order_by_columns_str
+        sql = select_columns_str + " from [table] " + group_by_columns_str + order_by_columns_str
+
+        # split + joinで空白の数を調整している
+        sql.split("\s").join("\s")
     end
 
 end
