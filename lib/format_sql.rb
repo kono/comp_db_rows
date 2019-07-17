@@ -38,8 +38,8 @@ class FormatSql
     # sqlを組み立てる。結果的に初期sql にgroup by句やorder by句がなければ追加することになる。
     def make_up_sql
         select_columns_str = "select " + @select_columns.join(", ")
-        group_by_columns_str = " group by " + @group_by_columns.join(", ")
-        order_by_columns_str = " order by " + @group_by_columns.join(", ")
+        group_by_columns_str = @group_by_columns.empty? ? "" : " group by " + @group_by_columns.join(", ")
+        order_by_columns_str = @group_by_columns.empty? ? "" : " order by " + @group_by_columns.join(", ")
 
         sql = select_columns_str + " from [table] " + group_by_columns_str + order_by_columns_str
 
