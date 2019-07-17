@@ -24,11 +24,24 @@ class FormatSql
         select_columns
     end
 
+    def include_setfunc?(col)
+        if col.downcase.include?('sum(') \
+            or col.downcase.include?('avg(') \
+            or col.downcase.include?('min(') \
+            or col.downcase.include?('max(') \
+            or col.downcase.include?('count(')
+            return true
+        else
+            return false
+        end
+        ret
+    end
+
     # selectされているカラムの配列からGroup by の対象になるカラムの配列を作って返す
     def get_group_by_columns
         group_by_columns = []
         @select_columns.each do |col|
-            unless col.downcase.include?('sum(')
+            unless include_setfunc?(col)
                 group_by_columns.push col
             end 
         end
