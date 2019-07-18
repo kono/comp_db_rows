@@ -72,18 +72,18 @@ module CompDbRows
         result_b = getcountrows(dbh_b, table_b)
         
        if result_a == result_b then
-          puts 'Record counts matches.(' +result_a.to_s + ')'
+          puts '[OK] Row counts matches.(' +result_a.to_s + ')'
           ret=true
           if result_a >= 1000000 then
-            puts '##ERROR## But it is too large number'
-            puts 'to execute data compare function.(>=1000000)'
+            puts '###[NG] But it is too large number'
+            puts '###[NG]   to execute data compare function.(>=1000000)'
             ret = false
           end
         else
-          puts '###Record counts unmatches!###'
-          puts 'table_a:'+result_a.to_s
-          puts 'table_b:'+result_b.to_s
-          puts 'Data compare function is not executed.'
+          puts '###[NG] Row counts unmatches!###'
+          puts '###[NG] table_a: '+result_a.to_s
+          puts '###[NG] table_b: '+result_b.to_s
+          puts '###[NG] Data compare function is not executed.'
         end
       rescue=>e
         print e.message
@@ -128,7 +128,7 @@ module CompDbRows
     def findColDiff(a_h, b_h,cnt)
       a_h.each{|k,v|
         if b_h[k] != v then
-          print "\nUNMATCH!  line(s):" + cnt.to_s + "| field: " + k + " | values(a != b) :" + v.to_s + "!=" + b_h[k].to_s + "\n"
+          print "\n###[NG] UNMATCH!  line(s):" + cnt.to_s + "| field: " + k + " | values(a != b) :" + v.to_s + "!=" + b_h[k].to_s + "\n"
         end
       }
     end
@@ -186,6 +186,7 @@ module CompDbRows
         dbh_a.disconnect if dbh_a
         dbh_b.disconnect if dbh_b
       end
+      puts "[OK] #{table_a} and #{table_b} are consistent." if ret == true
       return ret
     end
     
