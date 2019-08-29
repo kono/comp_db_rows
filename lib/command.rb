@@ -23,7 +23,11 @@ module CompDbRows
             t1=argv[1]
             
             max_errors=10
-            proc.compareRows(t0,t1,max_errors) 
+            ret = proc.compareRows(t0,t1,max_errors) 
+            if ret ==false
+                exit(1)
+            end
+                
         end
     end
 end

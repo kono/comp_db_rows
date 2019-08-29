@@ -180,6 +180,7 @@ module CompDbRows
       rescue=>e
         print e.message
         print e.backtrace.join("\n")
+        ret = false
       ensure
         sth_a.drop if sth_a
         sth_b.drop if sth_b
