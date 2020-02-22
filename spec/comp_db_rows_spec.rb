@@ -112,8 +112,8 @@ RSpec.describe CompDbRows do
     allow(sth_mock).to receive(:columns).and_return(column_hash)
     allow(dbh_mock).to receive(:disconnect)
     allow(sth_mock).to receive(:drop)
-    inputs1 = [{'field0'=>0, 'field1'=>'a','field2'=>'bb'},{'field0'=>1,'field1'=>'b','field2'=>'cc'} , nil].to_enum
-    inputs2 = [{'field0'=>0, 'field1'=>'a','field2'=>'bb'},{'field0'=>1,'field1'=>'b','field2'=>'cc'} , nil].to_enum
+    inputs1 = [{'field0'=>'0.0', 'field1'=>'a','field2'=>'bb'},{'field0'=>1,'field1'=>'b','field2'=>'cc'} , nil].to_enum
+    inputs2 = [{'field0'=>'0', 'field1'=>'a','field2'=>'bb'},{'field0'=>1,'field1'=>'b','field2'=>'cc'} , nil].to_enum
     sth_mock1=double('sth')
     sth_mock2=double('sth')
     expect(dbh_mock).to receive(:run).with('select field0,field1,field2 from table_A order by field0,field1,field2').and_return(sth_mock1)
@@ -123,8 +123,9 @@ RSpec.describe CompDbRows do
     expect(sth_mock1).to receive(:drop)
     expect(sth_mock2).to receive(:drop)
     expect(target2.compareRows("table_A","table_B",10)).to eq true
+
   end
-  
+
   it 'can compare the data of table_A and table_B when they do NOT have same data' do
     dbh_mock=double('dbh')
     allow(ODBC).to receive(:connect).with('rspectest','testuser','testpwd').and_return(dbh_mock)
