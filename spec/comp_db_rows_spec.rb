@@ -1,6 +1,6 @@
 RSpec.describe CompDbRows do
   let(:target1) { CompDbRows::CompDbRows.new('spec/comp_db_rows_spec1.yaml',[]) }
-  let(:target2) { CompDbRows::CompDbRows.new('spec/comp_db_rows_spec2.yaml',[]) }
+  let(:target2) { CompDbRows::CompDbRows.new('spec/comp_db_rows_spec2.yaml',[],['field0']) }
   let(:target3) { CompDbRows::CompDbRows.new('spec/comp_db_rows_spec3.yaml', []) }
 
 
