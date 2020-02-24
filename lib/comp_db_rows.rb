@@ -11,7 +11,7 @@ module CompDbRows
   
   class CompDbRows
    
-    def initialize(yaml,ignore_list)
+    def initialize(yaml, ignore_list, numeric_columns=[])
       @ignore_list=ignore_list
       conh = YAML.load(File.read(yaml))
       @dsn1 = conh['dsn1']
@@ -21,6 +21,7 @@ module CompDbRows
       @user2 = getuser2(conh)
       @pwd2 = getpwd2(conh)
       @compsql = conh['compsql']
+      @numeric_columns = numeric_columns
     end
     
     def getdsn2(conh)
@@ -151,6 +152,19 @@ module CompDbRows
       end
     end
     
+    def col_to_num(cols, hash)
+      cols.each do |col|
+        if hash[col].class == String
+          if hash[col].include?('.')
+            hash[col] = hash[col].to_f
+          else
+            hash[col] = hash[col].to_i
+          end
+        end
+      end
+      hash
+    end
+
     def compareRows(table_a,table_b,max_errors)
       if @compsql.nil? and checkRcdCount(table_a,table_b)==false
         exit(-1)
@@ -171,6 +185,8 @@ module CompDbRows
         while a_h=sth_a.fetch_hash and errcnt < max_errors do
           cnt += 1
           b_h = sth_b.fetch_hash
+          a_h = col_to_num(@numeric_columns, a_h)
+          b_h = col_to_num(@numeric_columns, b_h)
           if a_h != b_h
             ret = false
             errcnt += 1
