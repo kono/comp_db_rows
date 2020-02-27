@@ -17,7 +17,8 @@ module CompDbRows
                 print "compdbrows -y (yaml_file) table1 table2"
                 exit(-1)
             end
-        
+      
+            o[:numeric_columns] = [] if o[:numeric_columns].nil?
             proc=CompDbRows.new(o[:yaml],o[:ignore], o[:numeric_columns])
         
             t0=argv[0]
