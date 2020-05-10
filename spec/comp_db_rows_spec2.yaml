@@ -1,3 +1,9 @@
+# comp_db_rows_spec2.yaml
+# 比較する二つのテーブルの接続情報が同じ場合のyaml
+# 
+# If the connection information of the
+# two tables to be compared is the same, 
+# the YAML will look like this.
 dsn1: rspectest
 user1: testuser
 pwd1: testpwd

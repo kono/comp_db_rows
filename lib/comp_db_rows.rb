@@ -144,6 +144,8 @@ module CompDbRows
       autosql.make_up_sql.gsub('[table]', tablename)
     end
 
+    # yamlにcompsqlのエントリがあったら(= @compsqlがnilでない)
+    # そのSQLを生かしてgetsql_confを実行。
     def getsql(tablename)
       if @compsql.nil?
         getsql_auto(tablename)

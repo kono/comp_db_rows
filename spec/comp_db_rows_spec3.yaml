@@ -1,3 +1,12 @@
+# comp_db_rows_spec3.yaml
+# 
+# A case with a "compsql" entry.
+# Without this entry, compare in all columns
+# (except for the -i option).
+# Use this entry if you want to compare summary 
+# values of numeric items and not to compare 
+# in such detail.
+
 dsn1: rspectest
 user1: testuser
 pwd1: testpwd
