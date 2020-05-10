@@ -1,3 +1,20 @@
+# comp_db_rows_spec1.yaml
+# table_Aとtable_Bを比較するとき
+# dsn1, user1, pwd1にtable_Aの接続情報
+# dsn2, user2, pwd2にtable_Bの接続情報を書く。
+# table_Aとtable_Bの接続先が同じ場合は
+# dsn1, user1, pwd1のみセットして
+# dsn2, user2, pwd2は省略可能。
+# 
+# When comparing table_A and table_B, the
+# dsn1, user1, and pwd1 contains the connection 
+# information of table_A.
+# dsn2, user2, and pwd2 contains the connection 
+# information of table_B.
+# If the connection information of table_A and 
+# table_B is the same, you shuld only set values on
+# dsn1, user1, and pwd1. 
+# (Entries of dsn2, user2, and pwd2 can be omitted).
 dsn1: rspectest
 user1: testuser
 pwd1: testpwd
