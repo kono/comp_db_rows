@@ -141,7 +141,9 @@ module CompDbRows
 
     def getsql_conf(tablename)
       autosql = FormatSql.new(@compsql)
-      autosql.make_up_sql.gsub('[table]', tablename)
+      sql = autosql.make_up_sql.gsub('[table]', tablename)
+      puts sql
+      sql
     end
 
     # yamlにcompsqlのエントリがあったら(= @compsqlがnilでない)
