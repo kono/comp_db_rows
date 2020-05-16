@@ -2,6 +2,7 @@ class FormatSql
     def initialize(sql_str)
         @sql = sql_str
         @select_columns = get_select_columns
+        @is_group_by = false
         @group_by_columns = get_group_by_columns
         @where_close = get_where_close
     end
@@ -54,6 +55,7 @@ class FormatSql
             or col.downcase.include?('min(') \
             or col.downcase.include?('max(') \
             or col.downcase.include?('count(')
+            @is_group_by = true
             return true
         else
             return false
@@ -78,7 +80,11 @@ class FormatSql
         group_by_columns_str = @group_by_columns.empty? ? "" : " group by " + @group_by_columns.join(", ")
         order_by_columns_str = @group_by_columns.empty? ? "" : " order by " + @group_by_columns.join(", ")
 
-        sql = @sql.downcase.split("from")[0] + " from [table] " + get_where_close + group_by_columns_str + order_by_columns_str
+        if @is_group_by
+            sql = @sql.downcase.split("from")[0] + " from [table] " + get_where_close + group_by_columns_str + order_by_columns_str
+        else
+            sql = @sql.downcase.split("from")[0] + " from [table] " + get_where_close  + order_by_columns_str
+        end
 
         # split + joinで空白の数を調整している
         sql.split("\s").join("\s")
