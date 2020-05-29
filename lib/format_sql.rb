@@ -15,7 +15,7 @@ class FormatSql
     end
     # SQL文からwhere句を抜き出して返す
     def get_where_close
-        sql_ar = @sql.downcase.gsub(/\,/, '').split("\s")
+        sql_ar = @sql.downcase.split("\s")
         where_pos = sql_ar.index("where")
         group_by_pos = sql_ar.index("group") || 99999999
         order_by_pos = sql_ar.index("order") || 99999999
