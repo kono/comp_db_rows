@@ -27,11 +27,18 @@ class FormatSql
         end
     end
 
+    def get_token_from_sql(sql)
+        regex1=/([A-Za-z0-9#@$\%\\_\(\*\)]+)/
+        regex2=/(\"[A-Za-z0-9#@$\%\\_\(\*\)\s]+\")/
+        regexp = Regexp.union(regex1, regex2)
+        sql.scan(regexp).flatten.delete_if{|x| x.nil?}
+    end
+
     # SQL文からselectされているカラムを抜き出して配列に入れて返す
     def get_select_columns
         sql_downcase = @sql.downcase
-        tokens_downcase = sql_downcase.gsub(/\,/, ' ').split("\s")
-        tokens = @sql.gsub(/\,/, ' ').split("\s")
+        tokens_downcase = get_token_from_sql(sql_downcase)
+        tokens = get_token_from_sql(@sql)
         select_columns=[]
         if sql_downcase.include?('distinct')
             pos = 2
