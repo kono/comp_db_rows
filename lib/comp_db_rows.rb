@@ -21,7 +21,11 @@ module CompDbRows
       @user2 = getuser2(conh)
       @pwd2 = getpwd2(conh)
       @compsql = conh['compsql']
-      @numeric_columns = numeric_columns
+      @numeric_columns = numeric_columns.size > 0 ? numeric_columns : get_numeric_columns(@compsql)
+    end
+
+    def get_numeric_columns(sql)
+      []
     end
     
     def getdsn2(conh)
@@ -99,9 +103,11 @@ module CompDbRows
     def getFullColumnName(table_a)
       begin
         dbh=dbcon1
-        sql = 'select * from ' + table_a
-        sth = dbh.prepare(sql)
-        ret_ar=sth.columns.keys
+        ret_ar = []
+        sth = dbh.columns(table_a)
+        while row = sth.fetch_hash
+          ret_ar << row['COLUMN_NAME']
+        end
         return ret_ar
       ensure
         sth.drop if sth
