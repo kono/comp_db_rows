@@ -11,7 +11,9 @@ module CompDbRows
   
   class CompDbRows
    
-    def initialize(yaml, ignore_list, numeric_columns=[])
+    def initialize(table_a, table_b, yaml, ignore_list, numeric_columns=[])
+      @table_a = table_a
+      @table_b = table_b
       @ignore_list=ignore_list
       conh = YAML.load(File.read(yaml))
       @dsn1 = conh['dsn1']

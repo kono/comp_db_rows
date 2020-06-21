@@ -22,7 +22,7 @@ module CompDbRows
             t1=argv[1]
 
             o[:numeric_columns] = [] if o[:numeric_columns].nil?
-            proc=CompDbRows.new(o[:yaml],o[:ignore], o[:numeric_columns])
+            proc=CompDbRows.new(t0, t1, o[:yaml],o[:ignore], o[:numeric_columns])
         
             
             max_errors=10
