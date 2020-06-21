@@ -18,11 +18,12 @@ module CompDbRows
                 exit(-1)
             end
       
+            t0=argv[0]
+            t1=argv[1]
+
             o[:numeric_columns] = [] if o[:numeric_columns].nil?
             proc=CompDbRows.new(o[:yaml],o[:ignore], o[:numeric_columns])
         
-            t0=argv[0]
-            t1=argv[1]
             
             max_errors=10
             ret = proc.compareRows(t0,t1,max_errors) 
