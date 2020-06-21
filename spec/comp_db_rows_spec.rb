@@ -1,7 +1,7 @@
 RSpec.describe CompDbRows do
-  let(:target1) { CompDbRows::CompDbRows.new('table_A', 'table_B', 'spec/comp_db_rows_spec1.yaml',[]) }
+  let(:target1) { CompDbRows::CompDbRows.new('table_A', 'table_B', 'spec/comp_db_rows_spec1.yaml',[],['dummy']) }
   let(:target2) { CompDbRows::CompDbRows.new('table_A', 'table_B', 'spec/comp_db_rows_spec2.yaml',[],['field0']) }
-  let(:target3) { CompDbRows::CompDbRows.new('table_A', 'table_B', 'spec/comp_db_rows_spec3.yaml', []) }
+  let(:target3) { CompDbRows::CompDbRows.new('table_A', 'table_B', 'spec/comp_db_rows_spec3.yaml', [],['field3']) }
 
 
   it "has a version number" do  # OK
@@ -12,6 +12,7 @@ RSpec.describe CompDbRows do
     dbh_mock=double('dbh')
     allow(ODBC).to receive(:connect).with('rspectest','testuser','testpwd').and_return(dbh_mock)
     allow(ODBC).to receive(:connect).with('rspectest2','testuser2','testpwd2').and_return(dbh_mock)
+    allow(dbh_mock).to receive(:disconnect)
     target1.dbcon1
     target1.dbcon2
   end
