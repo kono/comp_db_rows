@@ -177,8 +177,8 @@ module CompDbRows
       hash
     end
 
-    def compareRows(table_a,table_b,max_errors)
-      if @compsql.nil? and checkRcdCount(table_a,table_b)==false
+    def compareRows(max_errors)
+      if @compsql.nil? and checkRcdCount(@table_a,@table_b)==false
         exit(-1)
       end
       ret =true
@@ -188,8 +188,8 @@ module CompDbRows
         dbh_a,dbh_b = dbcon1,dbcon2
 
         
-        sql_a = getsql(table_a)
-        sql_b = getsql(table_b)
+        sql_a = getsql(@table_a)
+        sql_b = getsql(@table_b)
         
         sth_a = dbh_a.run(sql_a)
         sth_b = dbh_b.run(sql_b)
@@ -215,7 +215,7 @@ module CompDbRows
         dbh_a.disconnect if dbh_a
         dbh_b.disconnect if dbh_b
       end
-      puts "[OK] #{table_a} and #{table_b} are consistent." if ret == true
+      puts "[OK] #{@table_a} and #{@table_b} are consistent." if ret == true
       return ret
     end
     

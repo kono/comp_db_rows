@@ -125,7 +125,7 @@ RSpec.describe CompDbRows do
     expect(sth_mock4).to receive(:fetch_hash).exactly(2).times { inputs4.next}
     expect(sth_mock3).to receive(:drop)
     expect(sth_mock4).to receive(:drop)
-    expect(target2.compareRows("table_A","table_B",10)).to eq true
+    expect(target2.compareRows(10)).to eq true
 
   end
 
@@ -165,7 +165,7 @@ RSpec.describe CompDbRows do
     allow(sth_mock2).to receive(:fetch_hash){ inputs2.next}
     allow(sth_mock1).to receive(:drop)
     allow(sth_mock2).to receive(:drop)
-    expect(target2.compareRows("table_A","table_B",10)).to eq false
+    expect(target2.compareRows(10)).to eq false
   end
   
   it 'can enumrate errors given number of times by parameter' do
@@ -206,7 +206,7 @@ RSpec.describe CompDbRows do
     allow(sth_mock1).to receive(:drop)
     allow(sth_mock2).to receive(:drop)
     expect(target2).to receive(:findColDiff).with(anything, anything, anything).exactly(3).times
-    target2.compareRows("table_A","table_B",3)
+    target2.compareRows(3)
   end
 
   it 'can treat correctly compsql entry in yaml' do
