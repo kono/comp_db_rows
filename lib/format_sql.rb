@@ -28,8 +28,8 @@ class FormatSql
     end
 
     def get_token_from_sql(sql)
-        regex1=/([A-Za-z0-9#@$\%\\_\(\*\)]+)/
-        regex2=/(\"[A-Za-z0-9#@$\%\\_\(\*\)\s]+\")/
+        regex1=/([A-Za-z0-9#@$\%\\_\(\*\)\-]+)/
+        regex2=/(\"[A-Za-z0-9#@$\%\\_\(\*\)\-\s]+\")/
         regexp = Regexp.union(regex1, regex2)
         sql.scan(regexp).flatten.delete_if{|x| x.nil?}
     end
@@ -88,9 +88,9 @@ class FormatSql
         order_by_columns_str = @group_by_columns.empty? ? "" : " order by " + @group_by_columns.join(", ")
 
         if @is_group_by
-            sql = @sql.downcase.split("from")[0] + " from [table] " + get_where_close + group_by_columns_str + order_by_columns_str
+            sql = select_columns_str + " from [table] " + get_where_close + group_by_columns_str + order_by_columns_str
         else
-            sql = @sql.downcase.split("from")[0] + " from [table] " + get_where_close  + order_by_columns_str
+            sql = select_columns_str + " from [table] " + get_where_close  + order_by_columns_str
         end
 
         # split + joinで空白の数を調整している
