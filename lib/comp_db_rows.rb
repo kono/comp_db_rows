@@ -30,10 +30,10 @@ module CompDbRows
       begin
         dbh=dbcon1
         ret_ar = []
-        sth = dbh.columns(@table_a)
-        while row = sth.fetch_hash
-          ret_ar << row['COLUMN_NAME'] if row['TYPE_NAME'].downcase == 'numeric'
-        end
+        sth = dbh.prepare("select * from #{@table_a}")
+        sth.columns{|row|
+          ret_ar << row.name.downcase if row.type == 2
+         }
         return ret_ar
       ensure
         sth.drop if sth
@@ -177,11 +177,13 @@ module CompDbRows
     
     def col_to_num(cols, hash)
       cols.each do |col|
-        if hash[col].class == String
-          if hash[col].include?('.')
-            hash[col] = hash[col].to_f
-          else
-            hash[col] = hash[col].to_i
+        unless hash[col].nil?
+          if hash[col].class == String
+            if hash[col].include?('.')
+              hash[col] = hash[col].to_f
+            else
+              hash[col] = hash[col].to_i
+            end
           end
         end
       end
