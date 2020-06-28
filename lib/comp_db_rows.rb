@@ -116,11 +116,9 @@ module CompDbRows
     def getFullColumnName(table_a)
       begin
         dbh=dbcon1
-        ret_ar = []
-        sth = dbh.columns(table_a)
-        while row = sth.fetch_hash
-          ret_ar << row['COLUMN_NAME']
-        end
+        sql = 'select * from ' + table_a
+        sth = dbh.prepare(sql)
+        ret_ar = Marshal.load(Marshal.dump(sth.columns.keys))
         return ret_ar
       ensure
         sth.drop if sth

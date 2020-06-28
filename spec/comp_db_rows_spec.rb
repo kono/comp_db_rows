@@ -71,9 +71,10 @@ RSpec.describe CompDbRows do
     dbh_mock=double('dbh')
     allow(ODBC).to receive(:connect).with('rspectest','testuser','testpwd').and_return(dbh_mock)
     sth_mock=double('sth')
-    allow(dbh_mock).to receive(:columns).with('table_A').and_return(sth_mock)
-    inputs1 = [{'COLUMN_NAME'=>'field0'},{'COLUMN_NAME'=>'field1'},{'COLUMN_NAME'=>'field2'},{'COLUMN_NAME'=>'field3'},nil].to_enum
-    allow(sth_mock).to receive(:fetch_hash){inputs1.next }
+    allow(dbh_mock).to receive(:prepare).with('select * from table_A').and_return(sth_mock)
+    allow(dbh_mock).to receive(:disconnect)
+    column_hash={'field0'=>nil,'field1'=>nil,'field2'=>nil,'field3'=>nil}
+    allow(sth_mock).to receive(:columns).and_return(column_hash)
     allow(sth_mock).to receive(:drop)
     allow(dbh_mock).to receive(:disconnect)
     expect(target2.getColumnsName("table_A",[])).to eq ['field0','field1','field2','field3']
@@ -82,9 +83,10 @@ RSpec.describe CompDbRows do
     dbh_mock=double('dbh')
     allow(ODBC).to receive(:connect).with('rspectest','testuser','testpwd').and_return(dbh_mock)
     sth_mock=double('sth')
-    allow(dbh_mock).to receive(:columns).with('table_A').and_return(sth_mock)
-    inputs1 = [{'COLUMN_NAME'=>'field0'},{'COLUMN_NAME'=>'field1'},{'COLUMN_NAME'=>'field2'},{'COLUMN_NAME'=>'field3'},nil].to_enum
-    allow(sth_mock).to receive(:fetch_hash){ inputs1.next}
+    allow(dbh_mock).to receive(:prepare).with('select * from table_A').and_return(sth_mock)
+    allow(dbh_mock).to receive(:disconnect)
+    column_hash={'field0'=>nil,'field1'=>nil,'field2'=>nil,'field3'=>nil}
+    allow(sth_mock).to receive(:columns).and_return(column_hash)
     allow(dbh_mock).to receive(:disconnect)
     allow(sth_mock).to receive(:drop)
     expect(target2.getColumnsName("table_A",['field0','field2'])).to eq ['field1','field3']
@@ -107,12 +109,13 @@ RSpec.describe CompDbRows do
 
     sth_mock11 = double('sth11')
     sth_mock21 = double('sth21')
-    allow(dbh_mock).to receive(:columns).with('table_A').and_return(sth_mock11)
-    allow(dbh_mock).to receive(:columns).with('table_B').and_return(sth_mock21)
-    inputs11 = [{'COLUMN_NAME'=>'field0'},{'COLUMN_NAME'=>'field1'},{'COLUMN_NAME'=>'field2'}, nil].to_enum
-    inputs21 = [{'COLUMN_NAME'=>'field0'},{'COLUMN_NAME'=>'field1'},{'COLUMN_NAME'=>'field2'}, nil].to_enum
-    allow(sth_mock11).to receive(:fetch_hash){ inputs11.next}
-    allow(sth_mock21).to receive(:fetch_hash){ inputs21.next}
+    allow(dbh_mock).to receive(:prepare).with('select * from table_A').and_return(sth_mock11)
+    allow(dbh_mock).to receive(:disconnect)
+    column_hash={'field0'=>nil,'field1'=>nil,'field2'=>nil}
+    allow(sth_mock11).to receive(:columns).and_return(column_hash)
+    allow(dbh_mock).to receive(:prepare).with('select * from table_B').and_return(sth_mock21)
+    allow(dbh_mock).to receive(:disconnect)
+    allow(sth_mock21).to receive(:columns).and_return(column_hash)
     allow(dbh_mock).to receive(:disconnect)
     allow(sth_mock11).to receive(:drop)
     allow(sth_mock21).to receive(:drop)
@@ -145,14 +148,16 @@ RSpec.describe CompDbRows do
     allow(sth_mock1).to receive(:drop)
     allow(sth_mock2).to receive(:drop)
 
-    sth_mock3 = double('sth')
-    sth_mock4 = double('sth')
-    allow(dbh_mock).to receive(:columns).with('table_A').and_return(sth_mock3)
-    allow(dbh_mock).to receive(:columns).with('table_B').and_return(sth_mock4)
-    inputs3 = [{'COLUMN_NAME'=>'field0'},{'COLUMN_NAME'=>'field1'},{'COLUMN_NAME'=>'field2'} , nil].to_enum
-    inputs4 = [{'COLUMN_NAME'=>'field0'},{'COLUMN_NAME'=>'field1'},{'COLUMN_NAME'=>'field2'} , nil].to_enum
-    allow(sth_mock3).to receive(:fetch_hash){inputs3.next}
-    allow(sth_mock4).to receive(:fetch_hash){inputs4.next}
+    sth_mock3=double('sth3')
+    sth_mock4=double('sth4')
+    allow(dbh_mock).to receive(:prepare).with('select * from table_A').and_return(sth_mock3)
+    allow(dbh_mock).to receive(:disconnect)
+    column_hash={'field0'=>nil,'field1'=>nil,'field2'=>nil}
+    allow(sth_mock3).to receive(:columns).and_return(column_hash)
+    allow(dbh_mock).to receive(:prepare).with('select * from table_B').and_return(sth_mock4)
+    allow(dbh_mock).to receive(:disconnect)
+    allow(sth_mock4).to receive(:columns).and_return(column_hash)
+
     allow(dbh_mock).to receive(:disconnect)
     allow(sth_mock3).to receive(:drop)
     allow(sth_mock4).to receive(:drop)
@@ -186,13 +191,15 @@ RSpec.describe CompDbRows do
 
     sth_mock_a=double('sth_a')
     sth_mock_b=double('sth_b')
-    allow(dbh_mock).to receive(:columns).with('table_A').and_return(sth_mock_a)
-    allow(dbh_mock).to receive(:columns).with('table_B').and_return(sth_mock_b)
+
+    allow(dbh_mock).to receive(:prepare).with('select * from table_A').and_return(sth_mock_a)
+    allow(dbh_mock).to receive(:disconnect)
     column_hash={'field0'=>nil}
-    inputs_a = [{'COLUMN_NAME'=>'field0'}, nil].to_enum
-    inputs_b = [{'COLUMN_NAME'=>'field0'}, nil].to_enum
-    allow(sth_mock_a).to receive(:fetch_hash){ inputs_a.next}
-    allow(sth_mock_b).to receive(:fetch_hash){ inputs_b.next}
+    allow(sth_mock_a).to receive(:columns).and_return(column_hash)
+    allow(dbh_mock).to receive(:prepare).with('select * from table_B').and_return(sth_mock_b)
+    allow(dbh_mock).to receive(:disconnect)
+    allow(sth_mock_b).to receive(:columns).and_return(column_hash)
+
     allow(dbh_mock).to receive(:disconnect)
     allow(sth_mock_a).to receive(:drop)
     allow(sth_mock_b).to receive(:drop)
