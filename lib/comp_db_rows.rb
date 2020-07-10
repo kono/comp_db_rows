@@ -1,5 +1,5 @@
 require 'yaml'
-require 'odbc'
+require 'odbc_utf8'
 require 'optparse'
 require_relative "comp_db_rows/version"
 require_relative 'command'
